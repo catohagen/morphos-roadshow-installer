@@ -198,6 +198,9 @@ c: /**********************************************************************C*/
 source='Workbench/C/'
 dest='sys:C/'
 
+/* first rename included wget to wget68k so no existing wget gets overwritten */
+address command 'rename 'source'wget 'source'wget68k'
+
 if action="copy" then do
 address command ''action' 'source'* 'dest' comment'
 
