@@ -378,7 +378,7 @@ end
 return
 
 ppp: /**********************************************************************ppp*/
-step6="[32minstalled[37m"
+step8="[32minstalled[37m"
 
 if action='' then action='copy'
 source='Workbench/S/PPP-Configurations/'
