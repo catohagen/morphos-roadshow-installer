@@ -644,7 +644,7 @@ address command 'c:RoadshowControl save set tcp.mssdflt 'maximum_segment_size
 address command 'c:RoadshowControl save set tcp.recvspace 'tcp_recvspace
 address command 'c:RoadshowControl save set tcp.sendspace 'tcp_sendspace
 end
-step7="[32mdone[37m"
+step9="[32mdone[37m"
 call input
 
 trigger_stacks:
