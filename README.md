@@ -1,3 +1,3 @@
 morphos-roadshow-installer
 
-Read the .txt file
+Read Install_Roadshow_MorphOS.txt
