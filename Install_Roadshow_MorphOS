@@ -16,8 +16,9 @@ input:
 if exists('SYS:C/AddNetInterface') then step1="[32mAleady installed...[37m"
 if exists('SYS:Devs/NetInterfaces/SunGEM') then step2="[32mAleady installed...[37m"
 if exists('SYS:Devs/NetInterfaces/VIA_Rhine') then step3="[32mAleady installed...[37m"
-if exists('MOSSYS:S/network-startup') then step8="[31mis on[37m"
-if exists('MOSSYS:S/network-startup.off') then step8="[32mis off[37m"
+if exists('MOSSYS:S/network-startup') then netstack="[31mX[37m"
+if exists('MOSSYS:S/network-startup.off') then roadshow="[32mX[37m"
+
 
 action=''
 
@@ -37,7 +38,7 @@ say "press '6' to install Roadshow 68k PPP/PPPoE drivers for ADSL modems        
 say ""
 say "press '7' to configure Roadshow internal tcp settings                                        ["step7"]"
 say ""
-say "press '8' to Trigger Morphos internal Netstack TCP/IP stack on/off                           ["step8"]"
+say "press '8' to Trigger Morphos internal Netstack TCP/IP stack on/off                           ["netstack"] Netstack ["roadshow"] Roadshow"
 say ""
 say "press 'e' to manually edit basic configuration settings (your DNS and Gateway)               ["stepe"]"
 say "press 'u' to uninstall/remove all Roadshow 68k and all additional files"
