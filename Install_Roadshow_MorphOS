@@ -27,7 +27,7 @@ if exists('MOSSYS:S/network-startup.off') then roadshow="[32mX[37m"
 
 action=''
 
-options prompt " (select 1-8) -> : " 
+options prompt " (select 1-9) (s-t-e-u) (q) to quit -> : " 
 say ""
 say "Roadshow 68K Installer for MorphOS v1.2 [32m([37mcatohagen@fastmail.fm[32m)[37m"
 say ""
@@ -193,7 +193,13 @@ call install_base
 action='delete'
 call apple_hw
 action='delete'
-call pegasos_hw
+call pegasos_via_rhine
+action='delete'
+call efika_mpc52xx
+action='delete'
+call pegasos_marvell_discovery
+action='delete'
+call rtl_8139
 action='delete'
 call docs
 action='delete'
@@ -206,11 +212,15 @@ step3="[31mnot installed[37m"
 step4="[31mnot installed[37m"
 step5="[31mnot installed[37m"
 step6="[31mnot installed[37m"
+step7="[31mnot installed[37m"
+step8="[31mnot installed[37m"
+step9="[31mnot installed[37m"
  end 
  if choice~="yes" then do
  say ""
  say " Nothing was deleted..."
  address command 'wait 5'
+ return
  end
 end
  say " Roadshow was removed from system..."
@@ -452,8 +462,8 @@ end
 end
 
 if action="delete" then do
-dest='sys:Devs/NetInterfaces'
-address command ''action' 'dest 'all'
+dest='sys:Devs/NetInterfaces/SunGEM*'
+address command ''action' 'dest
 end
 
 return
@@ -481,8 +491,8 @@ end
 end
 
 if action="delete" then do
-dest='sys:Devs/NetInterfaces'
-address command ''action' 'dest 'all'
+dest='sys:Devs/NetInterfaces/VIA-Rhine*'
+address command ''action' 'dest
 end
 
 return
@@ -512,8 +522,8 @@ end
 end
 
 if action="delete" then do
-dest='sys:Devs/NetInterfaces'
-address command ''action' 'dest 'all'
+dest='sys:Devs/NetInterfaces/Freescale-MPC52xx*'
+address command ''action' 'dest
 end
 
 return
@@ -542,8 +552,8 @@ end
 end
 
 if action="delete" then do
-dest='sys:Devs/NetInterfaces'
-address command ''action' 'dest 'all'
+dest='sys:Devs/NetInterfaces/Marvell-Discovery-II*'
+address command ''action' 'dest
 end
 
 return
@@ -572,8 +582,8 @@ end
 end
 
 if action="delete" then do
-dest='sys:Devs/NetInterfaces'
-address command ''action' 'dest 'all'
+dest='sys:Devs/NetInterfaces/Realtek-RTL8139*'
+address command ''action' 'dest
 end
 
 return
