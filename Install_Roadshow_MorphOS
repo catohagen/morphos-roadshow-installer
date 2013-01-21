@@ -9,9 +9,8 @@ step5="[31mnot installed[37m"
 step6="[31mnot installed[37m"
 step7="[31mnot installed[37m"
 step8="[31mnot installed[37m"
-step9="[31mnot done[37m"
-
-
+step9="[31mnot installed[37m"
+steps="[31mnot done[37m"
 netstack="[31m [37m"
 roadshow="[31m [37m"
 
@@ -30,24 +29,21 @@ action=''
 
 options prompt " (select 1-8) -> : " 
 say ""
-say "Roadshow 68K Installer for MorphOS [32m([37mcatohagen@fastmail.fm[32m)[37m"
+say "Roadshow 68K Installer for MorphOS v1.2 [32m([37mcatohagen@fastmail.fm[32m)[37m"
 say ""
 say "press '1' to install Roadshow 68k TCP/IP stack                                                  ["step1"]"
 say ""
 say "press '2' to install Apple Mac Mini or PowerBook SunGEM network configuration for MorphOS       ["step2"]"
-say ""
 say "press '3' to install Pegasos/PegasosII internal VIA Rhine network configuration for MorphOS     ["step3"]"
-say ""
 say "press '4' to install EFIKA 5200B internal Freescale-MPC52xx network configuration for MorphOS   ["step4"]"
-say ""
 say "press '5' to install Pegasos/PegasosII internal Marvell-Discovery-II configuration for MorphOS  ["step5"]"
+say "press '6' to install Realtek-RTL8139 PCI card configuration for MorphOS                         ["step6"]"
 say ""
-say "press '6' to install Roadshow 68k Documentation (to SYS:Docs/Roadshow68k/)                      ["step6"]"
-say "press '7' to install Roadshow 68k The IPFILTER (IPF) Firewall                                   ["step7"]"
-say "press '8' to install Roadshow 68k PPP/PPPoE drivers for ADSL modems                             ["step8"]"
+say "press '7' to install Roadshow 68k Documentation (to SYS:Docs/Roadshow68k/)                      ["step7"]"
+say "press '8' to install Roadshow 68k The IPFILTER (IPF) Firewall                                   ["step8"]"
+say "press '9' to install Roadshow 68k PPP/PPPoE drivers for ADSL modems                             ["step9"]"
 say ""
-say "press '9' to configure Roadshow internal tcp settings                                           ["step9"]"
-say ""
+say "press 's' to configure Roadshow internal tcp settings                                           ["steps"]"
 say "press 't' to Trigger Morphos internal Netstack TCP/IP stack on/off                              ["netstack"] Netstack ["roadshow"] Roadshow"
 say ""
 say "press 'e' to manually edit basic configuration settings (your DNS and Gateway)                  ["stepe"]"
@@ -74,10 +70,11 @@ if choice="2" then call apple_hw
 if choice="3" then call pegasos_via_rhine
 if choice="4" then call efika_mpc52xx
 if choice="5" then call pegasos_marvell_discovery
-if choice="6" then call docs
-if choice="7" then call firewall
-if choice="8" then call ppp
-if choice="9" then call tune_tcp
+if choice="6" then call rtl_8139
+if choice="7" then call docs
+if choice="8" then call firewall
+if choice="9" then call ppp
+if choice="s" then call tune_tcp
 if choice="t" then call trigger_stacks
 
 
@@ -101,7 +98,6 @@ comment=left(line.i,1)
  line.i=right(line.i,startlinelen-1)
  line.i='#'line.i
  end
-
 say line.i
 i=i+1
 end
@@ -135,7 +131,6 @@ comment=left(line.i,1)
  line.i=right(line.i,startlinelen-1)
  line.i='#'line.i
  end
-
 say line.i
 i=i+1
 end
@@ -348,7 +343,7 @@ end
 return
 
 firewall: /**********************************************************************firewall*/
-step7="[32minstalled[37m"
+step8="[32minstalled[37m"
 if action='' then action='copy'
 source='Workbench/S/'
 dest='sys:S/'
@@ -377,7 +372,7 @@ end
 return
 
 docs: /**********************************************************************docs*/
-step6="[32minstalled[37m"
+step7="[32minstalled[37m"
 
 if action='' then action='copy'
 source='Documentation'
@@ -395,7 +390,7 @@ end
 return
 
 ppp: /**********************************************************************ppp*/
-step8="[32minstalled[37m"
+step9="[32minstalled[37m"
 
 if action='' then action='copy'
 source='Workbench/S/PPP-Configurations/'
@@ -552,6 +547,37 @@ address command ''action' 'dest 'all'
 end
 
 return
+
+rtl_8139:
+step6="[32minstalled[37m"
+if action='' then action='copy'
+source='Roadshow-Update-MorphOS/Files/'
+dest='sys:Devs/NetInterfaces/'
+
+if action="copy" then do
+address command ''action' 'source'Realtek-RTL8139 'dest' comment'
+address command ''action' 'source'Realtek-RTL8139.info 'dest' comment'
+say " Realtek-RTL8139 PCI ethernet configuration for MorphOS was installed."
+say ""
+say " This network interface configuration is preconfigured to connect with DHCP."
+say " If you want to use static IPv4 address, you need to manually edit your ip and a corresponding network mask." 
+say ""
+options prompt " Enter 'y' to edit (opens in editor) Realtek-RTL8139 interface or 'n' to stay with default DHCP -> : " 
+parse pull choice
+
+if choice="y" then do
+address command 'mossys:c/ed devs:NetInterfaces/Realtek-RTL8139'
+end
+
+end
+
+if action="delete" then do
+dest='sys:Devs/NetInterfaces'
+address command ''action' 'dest 'all'
+end
+
+return
+
 
 tune_tcp:
 say ""
