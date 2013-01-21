@@ -94,6 +94,14 @@ call open(dat,"SYS:Prefs/Env-Archive/sys/net/hosts",'R')
 i=1
 do until eof(dat)
 line.i=readln(dat)
+comment=left(line.i,1)
+/* replace netstack ; comment char to # that Roadshow uses */ 
+ if comment=";" then do
+ startlinelen=length(line.i)
+ line.i=right(line.i,startlinelen-1)
+ line.i='#'line.i
+ end
+
 say line.i
 i=i+1
 end
@@ -120,11 +128,20 @@ call open(dat,"SYS:Prefs/Env-Archive/sys/net/resolv.conf",'R')
 i=1
 do until eof(dat)
 line.i=readln(dat)
+comment=left(line.i,1)
+/* replace netstack ; comment char to # that Roadshow uses */ 
+ if comment=";" then do
+ startlinelen=length(line.i)
+ line.i=right(line.i,startlinelen-1)
+ line.i='#'line.i
+ end
+
 say line.i
 i=i+1
 end
 entries=i
 call close(dat)
+
 comment='# Lines below imported from Morphos Netstack <SYS:Prefs/Env-Archive/sys/net/resolv.conf>'
 
 i=1
