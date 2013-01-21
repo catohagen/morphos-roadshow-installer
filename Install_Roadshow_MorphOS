@@ -71,12 +71,14 @@ if choice="e" then call edit
 
 if choice="1" then call install
 if choice="2" then call apple_hw
-if choice="3" then call pegasos_hw
-if choice="4" then call docs
-if choice="5" then call firewall
-if choice="6" then call ppp
-if choice="7" then call tune_tcp
-if choice="8" then call trigger_stacks
+if choice="3" then call pegasos_via_rhine
+if choice="4" then call efika_mpc52xx
+if choice="5" then call pegasos_marvell_discovery
+if choice="6" then call docs
+if choice="7" then call firewall
+if choice="8" then call ppp
+if choice="9" then call tune_tcp
+if choice="t" then call trigger_stacks
 
 
 return
@@ -443,8 +445,7 @@ address command ''action' 'dest 'all'
 end
 
 return
-
-pegasos_hw: /**********************************************************************via*/
+pegasos_via_rhine: /**********************************************************************via*/
 step3="[32minstalled[37m"
 if action='' then action='copy'
 source='Roadshow-Update-MorphOS/Files/'
@@ -463,6 +464,67 @@ parse pull choice
 
 if choice="y" then do
 address command 'mossys:c/ed devs:NetInterfaces/VIA-Rhine'
+end
+
+end
+
+if action="delete" then do
+dest='sys:Devs/NetInterfaces'
+address command ''action' 'dest 'all'
+end
+
+return
+
+
+efika_mpc52xx: /**********************************************************************via*/
+step4="[32minstalled[37m"
+if action='' then action='copy'
+source='Roadshow-Update-MorphOS/Files/'
+dest='sys:Devs/NetInterfaces/'
+
+if action="copy" then do
+address command ''action' 'source'Freescale-MPC52xx 'dest' comment'
+address command ''action' 'source'Freescale-MPC52xx.info 'dest' comment'
+say " Efika internal Freescale-MPC52xx ethernet configuration for MorphOS was installed."
+say ""
+say " This network interface configuration is preconfigured to connect with DHCP."
+say " If you want to use static IPv4 address, you need to manually edit your ip and a corresponding network mask." 
+say ""
+options prompt " Enter 'y' to edit (opens in editor) Freescale-MPC52xx interface or 'n' to stay with default DHCP -> : " 
+parse pull choice
+
+if choice="y" then do
+address command 'mossys:c/ed devs:NetInterfaces/Freescale-MPC52xx'
+end
+
+end
+
+if action="delete" then do
+dest='sys:Devs/NetInterfaces'
+address command ''action' 'dest 'all'
+end
+
+return
+
+pegasos_marvell_discovery: /**********************************************************************via*/
+step5="[32minstalled[37m"
+if action='' then action='copy'
+source='Roadshow-Update-MorphOS/Files/'
+dest='sys:Devs/NetInterfaces/'
+
+if action="copy" then do
+address command ''action' 'source'Marvell-Discovery-II 'dest' comment'
+address command ''action' 'source'Marvell-Discovery-II.info 'dest' comment'
+say " Pegasos internal Marvell-Discovery-II ethernet configuration for MorphOS was installed."
+say ""
+say " This network interface configuration is preconfigured to connect with DHCP."
+say " If you want to use static IPv4 address, you need to manually edit your ip and a corresponding network mask." 
+say ""
+options prompt " Enter 'y' to edit (opens in editor) Marvell-Discovery-II interface or 'n' to stay with default DHCP -> : " 
+parse pull choice
+
+if choice="y" then do
+address command 'mossys:c/ed devs:NetInterfaces/Marvell-Discovery-II'
 end
 
 end
