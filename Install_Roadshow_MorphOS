@@ -64,7 +64,7 @@ if choice="4" then call docs
 if choice="5" then call firewall
 if choice="6" then call ppp
 if choice="7" then call tune_tcp
-if choice="8" then call trigger_netstack
+if choice="8" then call trigger_stacks
 
 
 return
@@ -556,11 +556,34 @@ end
 step7="[32mdone[37m"
 call input
 
-trigger_netstack:
+trigger_stacks:
 
-if exists('MOSSYS:S/network-startup') then
+if exists('MOSSYS:S/network-startup') then do
+say 'disable netstack and enable roadshow...'
 address command 'rename MOSSYS:S/network-startup MOSSYS:S/network-startup.off'
-else
-address command 'rename MOSSYS:S/network-startup.off MOSSYS:S/network-startup'
+address command 'rename SYS:S/network-startup.off SYS:S/network-startup'
+netstack="[31m [37m"
+address command 'wait 1'
+return
+end
 
+if exists('MOSSYS:S/network-startup.off') then do
+say 'disable roadshow and enable netstack...'
+address command 'rename MOSSYS:S/network-startup.off MOSSYS:S/network-startup'
+address command 'rename SYS:S/network-startup SYS:S/network-startup.off'
+roadshow="[31m [37m"
+address command 'wait 1'
+return
+end
+
+return
+
+import_netstack_hosts:
+call open(dat,"ram:list",'R')
+
+do until eof(dat)
+line=readln(dat)
+say line'<br>'
+end
+call close(dat)
 return
