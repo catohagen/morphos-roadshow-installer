@@ -331,7 +331,7 @@ end
 return
 
 firewall: /**********************************************************************firewall*/
-step5="[32minstalled[37m"
+step7="[32minstalled[37m"
 if action='' then action='copy'
 source='Workbench/S/'
 dest='sys:S/'
@@ -360,7 +360,7 @@ end
 return
 
 docs: /**********************************************************************docs*/
-step4="[32minstalled[37m"
+step6="[32minstalled[37m"
 
 if action='' then action='copy'
 source='Documentation'
