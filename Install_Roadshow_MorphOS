@@ -583,7 +583,7 @@ say 'disable netstack and enable roadshow...'
 address command 'rename MOSSYS:S/network-startup MOSSYS:S/network-startup.off'
 address command 'rename SYS:S/network-startup.off SYS:S/network-startup'
 netstack="[31m [37m"
-address command 'wait 1'
+address command 'wait 3'
 return
 end
 
@@ -592,7 +592,7 @@ say 'disable roadshow and enable netstack...'
 address command 'rename MOSSYS:S/network-startup.off MOSSYS:S/network-startup'
 address command 'rename SYS:S/network-startup SYS:S/network-startup.off'
 roadshow="[31m [37m"
-address command 'wait 1'
+address command 'wait 3'
 return
 end
 
