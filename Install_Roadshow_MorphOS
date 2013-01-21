@@ -1,0 +1,565 @@
+/* Morphos installer for Roadshow 68K TCP/IP stack v1 (19.01.2013) by catohaghen@fastmail.fm */
+
+
+step1="[31mnot installed[37m"
+step2="[31mnot installed[37m"
+step3="[31mnot installed[37m"
+step4="[31mnot installed[37m"
+step5="[31mnot installed[37m"
+step6="[31mnot installed[37m"
+step7="[31mnot done[37m"
+step8="[31mis on[37m"
+stepe="[31mnot done[37m"
+stepu="[31mnot done[37m"
+
+input:
+if exists('SYS:C/AddNetInterface') then step1="[32mAleady installed...[37m"
+if exists('SYS:Devs/NetInterfaces/SunGEM') then step2="[32mAleady installed...[37m"
+if exists('SYS:Devs/NetInterfaces/VIA_Rhine') then step3="[32mAleady installed...[37m"
+if exists('MOSSYS:S/network-startup') then step8="[31mis on[37m"
+if exists('MOSSYS:S/network-startup.off') then step8="[32mis off[37m"
+
+action=''
+
+options prompt " (select 1-8) -> : " 
+say ""
+say "Roadshow 68K Installer for MorphOS [32m([37mcatohagen@fastmail.fm[32m)[37m"
+say ""
+say "press '1' to install Roadshow 68k TCP/IP stack                                               ["step1"]"
+say ""
+say "press '2' to install Apple Mac Mini or PowerBook SunGEM network configuration for MorphOS    ["step2"]"
+say ""
+say "press '3' to install Pegasos/PegasosII internal VIA Rhine network configuration for MorphOS  ["step3"]"
+say ""
+say "press '4' to install Roadshow 68k Documentation (to SYS:Docs/Roadshow68k/)                   ["step4"]"
+say "press '5' to install Roadshow 68k The IPFILTER (IPF) Firewall                                ["step5"]"
+say "press '6' to install Roadshow 68k PPP/PPPoE drivers for ADSL modems                          ["step6"]"
+say ""
+say "press '7' to configure Roadshow internal tcp settings                                        ["step7"]"
+say ""
+say "press '8' to Trigger Morphos internal Netstack TCP/IP stack on/off                           ["step8"]"
+say ""
+say "press 'e' to manually edit basic configuration settings (your DNS and Gateway)               ["stepe"]"
+say "press 'u' to uninstall/remove all Roadshow 68k and all additional files"
+say "**(Deletes all Roadshow files ,Apple/Pegasos config,docs,firewall and PPP/PPPoE drivers)"
+say ""
+say "press 'q' to quit this installer"
+say ""
+say ""
+
+parse pull choice
+call cmd
+call input
+exit
+
+cmd:
+if choice="q" then call end
+if choice="u" then call uninstall
+if choice="e" then call edit
+
+if choice="1" then call install
+if choice="2" then call apple_hw
+if choice="3" then call pegasos_hw
+if choice="4" then call docs
+if choice="5" then call firewall
+if choice="6" then call ppp
+if choice="7" then call tune_tcp
+if choice="8" then call trigger_netstack
+
+
+return
+
+edit:
+stepe="[32mdone[37m"
+/* ##########################################################IMPORT HOSTS */
+call open(dat,"SYS:Prefs/Env-Archive/sys/net/hosts",'R')
+i=1
+do until eof(dat)
+line.i=readln(dat)
+say line.i
+i=i+1
+end
+entries=i
+call close(dat)
+comment='# Lines below imported from Morphos Netstack <SYS:Prefs/Env-Archive/sys/net/hosts>'
+
+i=1
+call open(dat,"sys:devs/internet/hosts",'a')
+call writeln(dat,comment)
+do until i=entries-1
+call writeln(dat,line.i)
+i=i+1
+end
+call close(dat)
+/* ########################################################## NAMESERVERS */
+
+call open(dat,"SYS:Prefs/Env-Archive/sys/net/resolv.conf",'R')
+i=1
+do until eof(dat)
+line.i=readln(dat)
+say line.i
+i=i+1
+end
+entries=i
+call close(dat)
+comment='# Lines below imported from Morphos Netstack <SYS:Prefs/Env-Archive/sys/net/resolv.conf>'
+
+i=1
+call open(dat,"sys:devs/internet/name_resolution",'a')
+call writeln(dat,comment)
+do until i=entries-1
+call writeln(dat,line.i)
+i=i+1
+end
+call close(dat)
+
+say ""
+say " Opening config files in editor, remember to save your changes before you quit the editor..."
+say ""
+address command 'mossys:c/ed devs:internet/name_resolution'
+address command 'mossys:c/ed devs:internet/routes'
+return
+
+
+
+install:
+step1="[32minstalled[37m"
+address command 'filenote #? "Roadshow 68K MorphOS Update 1.7" all'
+action='copy'
+call install_base
+/*
+options prompt "Do you want to edit/configure basic settings (your DNS and Gateway) ? -> : " 
+parse pull choice
+call cmd_config
+
+cmd_config:
+if choice="y" then call edit
+if choice="n" then call input
+return
+*/
+
+return
+
+uninstall:
+say ""
+options prompt " ** This will delete all files related to Roadshow, ARE YOU SURE ** (y or n) : " 
+parse pull choice
+if choice="y" then do
+options prompt " ** Enter 'yes' or 'no' : " 
+parse pull choice
+if choice="yes" then do
+action='delete'
+call install_base
+action='delete'
+call apple_hw
+action='delete'
+call pegasos_hw
+action='delete'
+call docs
+action='delete'
+call firewall
+action='delete'
+call ppp
+step1="[31mnot installed[37m"
+step2="[31mnot installed[37m"
+step3="[31mnot installed[37m"
+step4="[31mnot installed[37m"
+step5="[31mnot installed[37m"
+step6="[31mnot installed[37m"
+ end 
+ if choice~="yes" then do
+ say ""
+ say " Nothing was deleted..."
+ address command 'wait 5'
+ end
+end
+ say " Roadshow was removed from system..."
+ address command 'wait 5'
+
+return
+
+/* END EXIT SCRIPT HERE */
+end:
+say ""
+say " * As this installer will not edit or touch your MorphOS internal system files (MOSSYS:) you need to manually"
+say " * rename MOSSYS:S/network-startup so the MorphOS internal Netstack will not be started on the next reboot."
+say ""
+say " After you have done this and rebooted, you can manually start S:Network-Startup.off (dbl click from Ambient) and bring Roadshow up."
+say " If everything works, you can rename S:Network-Startup.off to S:Network-Startup and Roadshow will be started at boot."
+/*address AMBIENT loaduri 'mossys:s?view=list' newwin */
+exit
+
+
+install_base: /* install all basic files required for Roadshow to work on a local network */
+
+c: /**********************************************************************C*/
+source='Workbench/C/'
+dest='sys:C/'
+
+if action="copy" then do
+address command ''action' 'source'* 'dest' comment'
+
+/* addnetinterfaces from Morphos upgrade */
+source='Roadshow-Update-MorphOS/Files/'
+address command ''action' 'source'AddNetInterface 'dest' comment'
+
+end
+
+if action="delete" then do
+address command ''action' 'dest'AddNetRoute'
+address command ''action' 'dest'ConfigureNetInterface'
+address command ''action' 'dest'GetNetStatus'
+address command ''action' 'dest'ipfstat'
+address command ''action' 'dest'ipnat'
+address command ''action' 'dest'NetShutdown'
+address command ''action' 'dest'ppp_connector'
+address command ''action' 'dest'RemoveNetInterface'
+address command ''action' 'dest'SampleNetSpeed'
+address command ''action' 'dest'tcpdump'
+address command ''action' 'dest'wget68k'
+address command ''action' 'dest'traceroute'
+address command ''action' 'dest'ShowNetStatus'
+address command ''action' 'dest'RoadshowControl'
+address command ''action' 'dest'ppp_sample'
+address command ''action' 'dest'ppp_dialer'
+address command ''action' 'dest'ping'
+address command ''action' 'dest'NetLogViewer'
+address command ''action' 'dest'ipmon'
+address command ''action' 'dest'ipf'
+address command ''action' 'dest'ftp'
+address command ''action' 'dest'DeleteNetRoute'
+address command ''action' 'dest'arp'
+address command ''action' 'dest'AddNetInterface'
+end
+
+devs: /**********************************************************************devs*/
+source='Workbench/Devs/Internet/'
+dest='sys:Devs/Internet/'
+
+if action="copy" then do
+address command ''action' 'source'* 'dest' comment all'
+end
+
+if action="delete" then do
+dest='sys:Devs/Internet'
+address command ''action' 'dest 'all'
+end
+
+
+libs: /**********************************************************************libs*/
+source='Workbench/Libs/'
+dest='sys:Libs/'
+
+if action="copy" then do
+address command ''action' 'source'* 'dest' comment all'
+end
+
+if action="delete" then do
+dest='sys:Libs/'
+address command ''action' 'dest'usergroup.library'
+address command ''action' 'dest'bsdsocket.library'
+end
+
+s: /**********************************************************************S*/
+source='Workbench/S/'
+dest='sys:S/'
+
+if action="copy" then do
+address command ''action' 'source'Network-Startup 'dest' comment all'
+/* rename so it doesnt start up at boot */
+address command 'rename SYS:S/Network-Startup SYS:S/Network-Startup.off'
+end
+
+if action="delete" then do
+dest='sys:S/'
+address command ''action' 'dest'Network-Startup'
+end
+
+return 0
+
+
+/* Locale, documentation, firewall and ppp&pppoe installations */
+
+
+locale: /**********************************************************************locale*/
+if action='' then action='copy'
+source='Workbench/Locale/catalogs/deutsch/'
+dest='sys:Locale/catalogs/deutsch/'
+if action="copy" then do
+address command ''action' 'source'* 'dest' comment'
+end
+
+if action="delete" then do
+address command ''action' 'dest'usergroup.catalog'
+address command ''action' 'dest'roadshow.catalog'
+address command ''action' 'dest'ppp-serial.catalog'
+address command ''action' 'dest'ppp-ethernet.catalog'
+address command ''action' 'dest'bsdsocket.catalog'
+end
+return
+
+firewall: /**********************************************************************firewall*/
+step5="[32minstalled[37m"
+if action='' then action='copy'
+source='Workbench/S/'
+dest='sys:S/'
+
+if action="copy" then do
+address command ''action' 'source'Check-Firewall-Rules 'dest' comment'
+address command ''action' 'source'Stop-Firewall 'dest' comment'
+address command ''action' 'source'Start-Firewall 'dest' comment'
+
+source='Workbench/S/IPF'
+dest='sys:S/'
+address command ''action' 'source'* 'dest' comment all'
+
+end
+
+if action="delete" then do
+dest='sys:S/'
+address command ''action' 'dest'Check-Firewall-Rules'
+address command ''action' 'dest'Stop-Firewall'
+address command ''action' 'dest'Start-Firewall'
+
+dest='sys:S/IPF'
+address command ''action' 'dest 'all'
+
+end
+return
+
+docs: /**********************************************************************docs*/
+step4="[32minstalled[37m"
+
+if action='' then action='copy'
+source='Documentation'
+dest='sys:Docs/Roadshow68k/'
+
+if action="copy" then do
+address command ''action' 'source'* 'dest' comment all'
+end
+
+if action="delete" then do
+dest='sys:Docs/Roadshow68k'
+address command ''action' 'dest 'all'
+end
+
+return
+
+ppp: /**********************************************************************ppp*/
+step6="[32minstalled[37m"
+
+if action='' then action='copy'
+source='Workbench/S/PPP-Configurations/'
+dest='sys:S/PPP-Configurations/'
+
+if action="copy" then do
+address command ''action' 'source'* 'dest' comment all'
+source='Workbench/Devs/Networks/'
+dest='sys:Devs/Networks/'
+address command ''action' 'source'* 'dest' comment all'
+
+/* copy the PPP/PPPoE drivers */
+source='Workbench/Storage/NetInterfaces/'
+dest='sys:Devs/NetInterfaces/'
+address command ''action' 'source'PPP 'dest' comment'
+address command ''action' 'source'PPP.info 'dest' comment'
+address command ''action' 'source'PPPoE 'dest' comment'
+address command ''action' 'source'PPPoE.info 'dest' comment'
+
+end
+
+if action="delete" then do
+dest='sys:Devs/Networks/'
+address command ''action' 'dest'ppp-serial.device'
+address command ''action' 'dest'ppp-ethernet.device'
+dest='sys:S/PPP-Configurations'
+address command ''action' 'dest 'all'
+dest='sys:Devs/NetInterfaces/'
+address command ''action' 'dest'PPP'
+address command ''action' 'dest'PPP.info'
+address command ''action' 'dest'PPPoE'
+address command ''action' 'dest'PPPoE.info'
+
+end
+return
+
+
+apple_hw: /**********************************************************************sungem*/
+step2="[32minstalled[37m"
+if action="" then action="copy"
+source='Roadshow-Update-MorphOS/Files/'
+dest='sys:Devs/NetInterfaces/'
+
+if action="copy" then do
+address command ''action' 'source'SunGEM.info 'dest' comment'
+address command ''action' 'source'SunGEM 'dest' comment'
+say " Apple Mac Mini or PowerBook SunGEM ethernet configuration for MorphOS was installed."
+say ""
+say " This network interface configuration is preconfigured to connect with DHCP."
+say " If you want to use static IPv4 address, you need to manually edit your ip and a corresponding network mask." 
+say ""
+options prompt " Enter 'y' to edit (opens in editor) SunGEM interface or 'n' to stay with default DHCP -> : " 
+parse pull choice
+
+if choice="y" then do
+address command 'mossys:c/ed devs:NetInterfaces/SunGEM'
+end
+
+end
+
+if action="delete" then do
+dest='sys:Devs/NetInterfaces'
+address command ''action' 'dest 'all'
+end
+
+return
+
+pegasos_hw: /**********************************************************************via*/
+step3="[32minstalled[37m"
+if action='' then action='copy'
+source='Roadshow-Update-MorphOS/Files/'
+dest='sys:Devs/NetInterfaces/'
+
+if action="copy" then do
+address command ''action' 'source'VIA-Rhine.info 'dest' comment'
+address command ''action' 'source'VIA-Rhine 'dest' comment'
+say " Pegasos/PegasosII internal VIA Rhine ethernet configuration for MorphOS was installed."
+say ""
+say " This network interface configuration is preconfigured to connect with DHCP."
+say " If you want to use static IPv4 address, you need to manually edit your ip and a corresponding network mask." 
+say ""
+options prompt " Enter 'y' to edit (opens in editor) VIA_Rhine interface or 'n' to stay with default DHCP -> : " 
+parse pull choice
+
+if choice="y" then do
+address command 'mossys:c/ed devs:NetInterfaces/VIA-Rhine'
+end
+
+end
+
+if action="delete" then do
+dest='sys:Devs/NetInterfaces'
+address command ''action' 'dest 'all'
+end
+
+return
+
+tune_tcp:
+say ""
+say ""
+say " By default Roadshow might have too low default values for internal tcp settings, will attempt to adjust these."
+say ""
+options prompt " Whats your internet connection speed in megabit (Mbps) ? -> : " 
+parse pull mbps
+
+kbps=mbps*1024  /*in Kbps*/
+
+
+say " To get some numbers about your RTT and ping time, we will ping a few sites."
+pingmenu:
+say ""
+say " Press:"
+say " [1] to ping http://google.com"
+say " [2] to ping http://morphozone.org"
+say " [3] to ping http://aminet.net"
+say " [4] to ping http://pouet.net"
+say " [q] to continue setup"
+say ""
+options prompt " Enter what site to ping, press ctrl-c to stop when pinging [1-4] or [c] enter ping time -> : " 
+parse pull site
+
+if site="1" then address command 'ping google.com'
+if site="2" then address command 'ping morphzone.org'
+if site="3" then address command 'ping aminet.net'
+if site="4" then address command 'ping pouet.net'
+if site="c" then call cont
+call pingmenu
+
+cont:
+say ""
+options prompt " Whats your average RTT or ping time, this can vary alot but usally a value between 10ms to 50s (in ms)? -> : " 
+parse pull rtt
+say ""
+
+bandwidth_delay_product=kbps*rtt /*  speed in kbps and multiply it by the latency in ms*/
+congestion_window=bandwidth_delay_product/8 /* get the number of bytes for a congestion window in bits wide, divide by 8*/
+
+
+say ""
+say " Roadshow have default MSS (tcp.mssdflt) of 512, this is the maximum segment size used when no better information is available."
+say " These days, most networks are capable of moving packets of 1500 bytes, so a good value is 1460 (1500 minus 40 bytes for headers)"
+say ""
+options prompt " Enter the maximum segment size (tcp.mssdflt) of your network (for MorphOS machines 1460 is recommended) -> : " 
+parse pull maximum_segment_size
+say ""
+
+congestion_window_size=trunc(congestion_window % maximum_segment_size) /* truncate so congestion window size is an even multiple of the default MSS */
+
+say "congestion_window_size :"congestion_window_size
+say "We need this number to be even, rounding up to even number"
+
+do until remain=1
+remain=congestion_window_size//2
+congestion_window_size=congestion_window_size+1
+end
+say "New congestion_window_size :"congestion_window_size
+
+congestion_window_size=congestion_window_size/2     /* get sane numbers for Roadshow, if number is too high, it will freeze, we divide by 2 */
+
+/* calc new tcp.sendspace and tcp.recvspace */
+tcp_sendspace=congestion_window_size*maximum_segment_size
+tcp_recvspace=congestion_window_size*maximum_segment_size
+
+/* read the current values */
+
+if exists('envarc:roadshow/tcp/sendspace') then do
+call open(file,'envarc:roadshow/tcp/sendspace','r')
+current_sendspace=readln(file)
+call close(file)
+end
+
+if exists('envarc:roadshow/tcp/recvspace') then do
+call open(file,'envarc:roadshow/tcp/recvspace','r')
+current_recvspace=readln(file)
+call close(file)
+end
+
+if exists('envarc:roadshow/tcp/mssdflt') then do
+call open(file,'envarc:roadshow/tcp/mssdflt','r')
+current_mssdflt=readln(file)
+call close(file)
+end
+
+say ""
+say " Suggested new values for this computer :"
+say " tcp.sendspace : "tcp_sendspace"       ["current_sendspace"]"
+say " tcp.recvspace : "tcp_recvspace"       ["current_recvspace"]"
+say " tcp.mssdflt   : "maximum_segment_size"       ["current_mssdflt"]"
+say ""
+say " you can set these with the following commands :"
+say ""
+say " c:RoadshowControl save set tcp.mssdflt "maximum_segment_size
+say " c:RoadshowControl save set tcp.recvspace "tcp_recvspace
+say " c:RoadshowControl save set tcp.sendspace "tcp_sendspace
+say ""
+say " *note* if the values you get for tcp_sendspace and tcp_recvspace values are over"
+say " 80000 the network might become unresponsive ie. too high for the tcp/ip stack."
+say ""
+options prompt " Do you want to set and save these settings ? -> : " 
+parse pull set_save
+if set_save="y" then do
+address command 'c:RoadshowControl save set tcp.mssdflt 'maximum_segment_size
+address command 'c:RoadshowControl save set tcp.recvspace 'tcp_recvspace
+address command 'c:RoadshowControl save set tcp.sendspace 'tcp_sendspace
+end
+step7="[32mdone[37m"
+call input
+
+trigger_netstack:
+
+if exists('MOSSYS:S/network-startup') then
+address command 'rename MOSSYS:S/network-startup MOSSYS:S/network-startup.off'
+else
+address command 'rename MOSSYS:S/network-startup.off MOSSYS:S/network-startup'
+
+return
