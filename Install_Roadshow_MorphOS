@@ -221,6 +221,7 @@ address command ''action' 'dest'ppp_connector'
 address command ''action' 'dest'RemoveNetInterface'
 address command ''action' 'dest'SampleNetSpeed'
 address command ''action' 'dest'tcpdump'
+/* delete c:wget68k */
 address command ''action' 'dest'wget68k'
 address command ''action' 'dest'traceroute'
 address command ''action' 'dest'ShowNetStatus'
