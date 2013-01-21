@@ -8,7 +8,9 @@ step4="[31mnot installed[37m"
 step5="[31mnot installed[37m"
 step6="[31mnot installed[37m"
 step7="[31mnot done[37m"
-step8="[31mis on[37m"
+netstack="[31m [37m"
+roadshow="[31m [37m"
+
 stepe="[31mnot done[37m"
 stepu="[31mnot done[37m"
 
