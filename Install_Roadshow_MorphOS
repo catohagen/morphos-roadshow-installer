@@ -164,7 +164,7 @@ return
 
 install:
 step1="[32minstalled[37m"
-address command 'filenote #? "Roadshow 68K MorphOS Update 1.7" all'
+address command 'filenote #? "Roadshow 68K MorphOS Update 1.8" all'
 action='copy'
 call install_base
 /*
