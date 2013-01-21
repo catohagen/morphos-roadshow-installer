@@ -74,7 +74,10 @@ return
 
 edit:
 stepe="[32mdone[37m"
-/*
+say ""
+options prompt " Do you want to import the MorphOS Netstack 'hosts' file into Roadshow -> : " 
+parse pull ans
+if ans="y" then do
 /* ##########################################################IMPORT HOSTS */
 call open(dat,"SYS:Prefs/Env-Archive/sys/net/hosts",'R')
 i=1
@@ -95,6 +98,11 @@ call writeln(dat,line.i)
 i=i+1
 end
 call close(dat)
+end
+address command 'mossys:c/ed devs:internet/hosts'
+options prompt " Do you want to import the MorphOS Netstack dns 'NAMESERVERS' file into Roadshow -> : " 
+parse pull ans
+if ans="y" then do
 /* ########################################################## NAMESERVERS */
 
 call open(dat,"SYS:Prefs/Env-Archive/sys/net/resolv.conf",'R')
@@ -116,11 +124,15 @@ call writeln(dat,line.i)
 i=i+1
 end
 call close(dat)
-*/
+end
+
 say ""
 say " Opening config files in editor, remember to save your changes before you quit the editor..."
 say ""
 address command 'mossys:c/ed devs:internet/name_resolution'
+say ""
+options prompt " Opening config file for routes, this is the 'gateway' and is usally the ip of your router [press enter]"
+say ""
 address command 'mossys:c/ed devs:internet/routes'
 return
 
