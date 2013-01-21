@@ -1,6 +1,5 @@
 
-
-Quick Morphos installer for Roadshow 68K TCP/IP stack v1 (19.01.2013) by catohaghen@fastmail.fm
+Quick Morphos installer for Roadshow 68K TCP/IP stack v1.1 (21.01.2013) by catohaghen@fastmail.fm
 
 
 Since the orginal included installer for Roadshow doesnt work properly on Morphos, so I wrote one in arexx.
