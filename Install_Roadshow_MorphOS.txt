@@ -57,10 +57,12 @@ Option 4 installs files for Efika and the internal ethernet
 
 Option 5 Installs files for Pegasos II Marvell Discovery Gigabit network driver
 
-Option 4 copies the Roadshow documentation to SYS:Docs/Roadshow68K
-Option 5 installs The IPFILTER (IPF) Firewall, once installed you need to manually configure it and start it
+Option 6 Installs Realtek-RTL8139 PCI card configuration network driver
 
-Option 6 installes PPP/PPPoE device drivers spesific to ADSL users
+Option 7 copies the Roadshow documentation to SYS:Docs/Roadshow68K
+Option 8 installs The IPFILTER (IPF) Firewall, once installed you need to manually configure it and start it
+
+Option 9 installes PPP/PPPoE device drivers spesific to ADSL users
 
 
 
@@ -68,7 +70,7 @@ Configuration :
 
 More settings related options are :
 
-Option 7 runs through a setup that requires you enter informantion about your network, you need to know your connection speed
+Option [s] runs through a setup that requires you enter informantion about your network, you need to know your connection speed
          and round-trip-time (ping) your connection have.
 	 Adjusting these isnt required but can boost your browsing experience.
 
@@ -80,7 +82,6 @@ Option [e] lauches the Morphos internal editor (mossys:c/ed) and loads up config
            You need to know your : gateway (usally your routers ip)
                                    dns     (usally your routers ip)
                                    ip      (for your machine)
-
 
 
 Please read the Roadshow documentation if you need more information.
