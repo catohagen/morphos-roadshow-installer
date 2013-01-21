@@ -132,6 +132,7 @@ say ""
 address command 'mossys:c/ed devs:internet/name_resolution'
 say ""
 options prompt " Opening config file for routes, this is the 'gateway' and is usally the ip of your router [press enter]"
+parse pull choice
 say ""
 address command 'mossys:c/ed devs:internet/routes'
 return
