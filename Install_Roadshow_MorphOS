@@ -71,6 +71,7 @@ return
 
 edit:
 stepe="[32mdone[37m"
+/*
 /* ##########################################################IMPORT HOSTS */
 call open(dat,"SYS:Prefs/Env-Archive/sys/net/hosts",'R')
 i=1
@@ -112,7 +113,7 @@ call writeln(dat,line.i)
 i=i+1
 end
 call close(dat)
-
+*/
 say ""
 say " Opening config files in editor, remember to save your changes before you quit the editor..."
 say ""
