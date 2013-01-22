@@ -1,4 +1,3 @@
-
 This is a quick fix for the Roadshow 68k TCP/IP stack included installer that fails to work on MorphOS, so i wrote my own.
 
 Its written in Arexx scripting language, maybe not the best way to do an installer, but for now it works.
@@ -20,5 +19,19 @@ advantages over the orginal installer :
   your line speed and round-trip-time or ping, it can calculate better tcp.sendspace and tcp.recvspace
   so you will get much faster browsing responsivness and transfer rates over the web.
   (on my 60/60mbit line, i got ~1MB/s with default tcp settings, and ~4.5MB/s after this installer calculated my tcp settings)
+
+
+It will not work correctly if :
+ -if/when you manually installed Roadshow, you put c:addnetinterface directly in user-startup
+ -if you have disabled Morphos internal Netstack by renaming MOSSYS:S/network-startup some other name. Installer
+  tries to rename MOSSYS:S/network-startup to MOSSYS:S/network-startup.off
+
+** So make user the file "network-startup" exist a MOSSYS:s/ and delete any existing "network-startup" in S: **
+
+For best results with this installer, its best to remove your manual installation, especially making sure there is no
+Roadshow startup files or lines added in user-startup or startup-sequence, Morphos internal Netstack should be enabled
+too, installer will rename the Netstack startup but can also enable it if you want it back, incase you want to go
+back to orginal configuration/system of Morphos incase there is an update.
+
 
 Read Install_Roadshow_MorphOS.txt 
