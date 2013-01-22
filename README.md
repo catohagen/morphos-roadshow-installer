@@ -25,9 +25,8 @@ advantages over the orginal installer :
 
 
 It will not work correctly if :
-
--if/when you manually installed Roadshow, you put c:addnetinterface directly in user-startup.
--if you have disabled Morphos internal Netstack by renaming MOSSYS:S/network-startup some other name.
+*if/when you manually installed Roadshow, you put c:addnetinterface directly in user-startup.
+*if you have disabled Morphos internal Netstack by renaming MOSSYS:S/network-startup some other name.
 Installer tries to rename MOSSYS:S/network-startup to MOSSYS:S/network-startup.off when you trigger the installer to enable Roadshow.
 
 
