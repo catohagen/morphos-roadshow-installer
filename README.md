@@ -26,7 +26,7 @@ It will not work correctly if :
  -if you have disabled Morphos internal Netstack by renaming MOSSYS:S/network-startup some other name. Installer
   tries to rename MOSSYS:S/network-startup to MOSSYS:S/network-startup.off
 
-** So make user the file "network-startup" exist a MOSSYS:s/ and delete any existing "network-startup" in S: **
+** So make sure the file "network-startup" exist a MOSSYS:s/ and delete any existing "network-startup" in S: before you start installing **
 
 For best results with this installer, its best to remove your manual installation, especially making sure there is no
 Roadshow startup files or lines added in user-startup or startup-sequence, Morphos internal Netstack should be enabled
