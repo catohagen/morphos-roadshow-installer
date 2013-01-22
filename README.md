@@ -15,6 +15,9 @@ advantages over the orginal installer :
   config file into editor, so you dont have to search and manually edit the file, the provided
   default configfiles have commented examples and comments, so its easy to edit what you need.
 
+* You can import your existing nameserver(dns) and hosts file directly into Roadshow files,
+  no editing of individual files(optional, it asks)
+
 * Another important feature it has, is the tuning of internal tcp settings, using your input about
   your line speed and round-trip-time or ping, it can calculate better tcp.sendspace and tcp.recvspace
   so you will get much faster browsing responsivness and transfer rates over the web.
@@ -22,15 +25,17 @@ advantages over the orginal installer :
 
 
 It will not work correctly if :
--if/when you manually installed Roadshow, you put c:addnetinterface directly in user-startup
--if you have disabled Morphos internal Netstack by renaming MOSSYS:S/network-startup some other name. Installer
-tries to rename MOSSYS:S/network-startup to MOSSYS:S/network-startup.off
+
+-if/when you manually installed Roadshow, you put c:addnetinterface directly in user-startup.
+-if you have disabled Morphos internal Netstack by renaming MOSSYS:S/network-startup some other name.
+Installer tries to rename MOSSYS:S/network-startup to MOSSYS:S/network-startup.off when you trigger the installer to enable Roadshow.
+
 
 ** So make sure the file "network-startup" exist a MOSSYS:s/ and delete any existing "network-startup" in S: before you start installing **
 
 For best results with this installer, its best to remove your manual installation, especially making sure there is no
 Roadshow startup files or lines added in user-startup or startup-sequence, Morphos internal Netstack should be enabled
-too, installer will rename the Netstack startup but can also enable it if you want it back, incase you want to go
+too, installer will disbale the internal Netstack startup but can also enable it if you want it back, incase you want to go
 back to orginal configuration/system of Morphos incase there is an update.
 
 
