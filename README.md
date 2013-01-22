@@ -18,11 +18,13 @@ advantages over the orginal installer :
 * You can import your existing nameserver(dns) and hosts file directly into Roadshow files,
   no editing of individual files(optional, it asks)
 
-* Another important feature it has, is the tuning of internal tcp settings, using your input about
-  your line speed and round-trip-time or ping, it can calculate better tcp.sendspace and tcp.recvspace
+* Another important feature it has, is the tuning of internal tcp settings, Roadshow default tcp settings
+  are not very efficient in routers today because when the TCP/IP kernel used by Roadshow was still new,
+  routers had low much lower packets than today, so you will see a 3-4 increase of throughput by adjusting tcp settings.
+  Using your input about your line speed and round-trip-time or ping, it can calculate better tcp.sendspace and tcp.recvspace
   so you will get much faster browsing responsivness and transfer rates over the web.
-  (on my 60/60mbit line, i got ~1MB/s with default tcp settings, and ~4.5MB/s after this installer calculated my tcp settings)
-
+  On my 60/60mbit line, i got ~1MB/s with default tcp settings, and ~4.5MB/s both in OWB and wget 1.9.1 after
+  this installer calculated my tcp settings.
 
 It will not work correctly if :
 * if/when you manually installed Roadshow, you put c:addnetinterface directly in user-startup.
