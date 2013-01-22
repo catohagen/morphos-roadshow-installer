@@ -687,7 +687,7 @@ say " c:RoadshowControl save set tcp.mssdflt "maximum_segment_size
 say " c:RoadshowControl save set tcp.recvspace "tcp_recvspace
 say " c:RoadshowControl save set tcp.sendspace "tcp_sendspace
 say ""
-say " *note* Network might become unresponsive if send/recvspace are too high, but under 100.000
+say " *note* Network might become unresponsive if send/recvspace are too high, but under 100.000"
 say " seems to work fine on Powerbook and Macmini, both on remote and local traffic."
 say ""
 options prompt " Do you want to set and save these settings ? -> : " 
