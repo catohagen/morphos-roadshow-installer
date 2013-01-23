@@ -1,4 +1,4 @@
-Quick Morphos installer for Roadshow 68K TCP/IP stack v1.2 (21.01.2013) by catohaghen@fastmail.fm
+This is a quick fix for the Roadshow 68k TCP/IP stack included installer that fails to work on MorphOS, so i wrote my own.
 
 Its written in Arexx scripting language, maybe not the best way to do an installer, but for now it works.
 
@@ -39,8 +39,7 @@ Roadshow startup files or lines added in user-startup or startup-sequence, Morph
 too, installer will disbale the internal Netstack startup but can also enable it if you want it back, incase you want to go
 back to orginal configuration/system of Morphos incase there is an update.
 
-**You need a working arexx installation to use this installer**
-
+** INSTALLATION WITH THE INSTALLER **
 
 first you need the Roadshow 68K archive and extract it somewhere (ramdisk is a good place)
 then you need the Roadshow MorphOS update, extract this to where you extracted Roadshow 68K
@@ -79,8 +78,7 @@ Option 1 installs all the basic stuff that Morphos needs, no files or settings f
 
 Option 2 installs files spesific to Apple Hardware with the SunGEM ethernet (Macmini and Powerbooks)
 
-Option 3 installs files for Pegasos I & II with the VIA Rhine ethernet, if you have a realtek card you just install with option 3
-         and when asked for configuring settings you change 'device=via_rhine_pci.device' to rtl_8139pci.device instead.
+Option 3 installs files for Pegasos I & II with the VIA Rhine ethernet.
 
 Option 4 installs files for Efika and the internal ethernet
 
@@ -100,18 +98,17 @@ Configuration :
 More settings related options are :
 
 Option [s] runs through a setup that requires you enter informantion about your network, you need to know your connection speed
-         and round-trip-time (ping) your connection have.
-	 Adjusting these isnt required but can boost your browsing experience.
+and round-trip-time (ping) your connection have. Adjusting these isnt required but can boost your browsing experience.
 
-         I have seen a good increase in performance locally on my Macmini and Powerbook, getting file transfers at 11.5 MB/s on the macmini
-         and 35 MB/s on the powerbook when copying from/to different machines in the lan.
+I have seen a good increase in performance locally on my Macmini and Powerbook, getting file transfers at 11.8 MB/s on the macmini
+and 35 MB/s on the powerbook when copying from/to different machines in the lan.
 
 Option [e] lauches the Morphos internal editor (mossys:c/ed) and loads up config files required for your local settings.
+           You will be asked if you want to import your existing Netstack configurations for nameservers(dns) and hosts
            If you want to use DHCP you can skip this step, as Roadshow will try and get all the relevant info it needs from your router.
            You need to know your : gateway (usally your routers ip)
                                    dns     (usally your routers ip)
                                    ip      (for your machine)
-
 
 Please read the Roadshow documentation if you need more information.
 
