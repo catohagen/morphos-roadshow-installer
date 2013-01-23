@@ -78,8 +78,7 @@ Option 1 installs all the basic stuff that Morphos needs, no files or settings f
 
 Option 2 installs files spesific to Apple Hardware with the SunGEM ethernet (Macmini and Powerbooks)
 
-Option 3 installs files for Pegasos I & II with the VIA Rhine ethernet, if you have a realtek card you just install with option 3
-         and when asked for configuring settings you change 'device=via_rhine_pci.device' to rtl_8139pci.device instead.
+Option 3 installs files for Pegasos I & II with the VIA Rhine ethernet.
 
 Option 4 installs files for Efika and the internal ethernet
 
@@ -105,11 +104,11 @@ I have seen a good increase in performance locally on my Macmini and Powerbook, 
 and 35 MB/s on the powerbook when copying from/to different machines in the lan.
 
 Option [e] lauches the Morphos internal editor (mossys:c/ed) and loads up config files required for your local settings.
+           You will be asked if you want to import your existing Netstack configurations for nameservers(dns) and hosts
            If you want to use DHCP you can skip this step, as Roadshow will try and get all the relevant info it needs from your router.
            You need to know your : gateway (usally your routers ip)
                                    dns     (usally your routers ip)
                                    ip      (for your machine)
-
 
 Please read the Roadshow documentation if you need more information.
 
