@@ -39,5 +39,85 @@ Roadshow startup files or lines added in user-startup or startup-sequence, Morph
 too, installer will disbale the internal Netstack startup but can also enable it if you want it back, incase you want to go
 back to orginal configuration/system of Morphos incase there is an update.
 
+** INSTALLATION WITH THE INSTALLER **
 
-Read Install_Roadshow_MorphOS.txt 
+first you need the Roadshow 68K archive and extract it somewhere (ramdisk is a good place)
+then you need the Roadshow MorphOS update, extract this to where you extracted Roadshow 68K
+then copy this installer to where you extracked Roadshow 68K
+
+ram:Roadshow should look like this
+
+Ram Disk:Roadshow> list
+Install_Roadshow_MorphOS.txt      4412 ----rwed Today     10:13:14
+Install_Roadshow_MorphOS.info     8262 ----rwed Today     10:13:14
+Install_Roadshow_MorphOS         18841 ----rwed Today     10:13:14
+Roadshow-Update-MorphOS.info       628 ----rwed 15-Jan-80 13:58:14
+Roadshow-Update-MorphOS            Dir ----rw-d 15-Jan-80 13:59:32
+Workbench                          Dir --p-rwed 10-Jan-80 14:04:08
+version                             31 ----rw-d 19-Jan-80 10:02:14
+ReadMe.info                        464 ----rw-d 20-Nov-10 11:40:06
+ReadMe                            8596 ----rw-d 19-Jan-80 11:14:28
+Installer                       109956 ----rwed 15-Nov-10 11:01:20
+Install_Roadshow.info              698 ----rw-d 21-Nov-10 10:06:16
+Install_Roadshow                 19490 ----rw-d 01-Jan-80 17:47:28
+Install-Extras                     Dir ----rwed 01-Jan-80 14:31:24
+Documentation                      Dir ----rw-d 08-Dec-80 10:21:08
+Documentation.info                 628 ----rw-d 20-Nov-10 11:40:06
+11 files - 4 directories - 172006 bytes used
+
+Open a shell and cd to where you extracted Roadshow and Roadshow MorphOS update
+
+type : rx Install_Roadshow_MorphOS to start (clicking icon should work too, resize the shell that pops up if its too small)
+
+
+The installer will help you install Roadshow 68K and spesific files you select depending on what hardware you have.
+
+*For a Morphos system you need to do atleast step [1] and [2 or 3 or 4 or 5] depending what network card you have, and option [e] *
+
+Option 1 installs all the basic stuff that Morphos needs, no files or settings for amiga hardware will be installed.
+
+Option 2 installs files spesific to Apple Hardware with the SunGEM ethernet (Macmini and Powerbooks)
+
+Option 3 installs files for Pegasos I & II with the VIA Rhine ethernet, if you have a realtek card you just install with option 3
+         and when asked for configuring settings you change 'device=via_rhine_pci.device' to rtl_8139pci.device instead.
+
+Option 4 installs files for Efika and the internal ethernet
+
+Option 5 Installs files for Pegasos II Marvell Discovery Gigabit network driver
+
+Option 6 Installs Realtek-RTL8139 PCI card configuration network driver
+
+Option 7 copies the Roadshow documentation to SYS:Docs/Roadshow68K
+Option 8 installs The IPFILTER (IPF) Firewall, once installed you need to manually configure it and start it
+
+Option 9 installes PPP/PPPoE device drivers spesific to ADSL users
+
+
+
+Configuration :
+
+More settings related options are :
+
+Option [s] runs through a setup that requires you enter informantion about your network, you need to know your connection speed
+and round-trip-time (ping) your connection have. Adjusting these isnt required but can boost your browsing experience.
+
+I have seen a good increase in performance locally on my Macmini and Powerbook, getting file transfers at 11.8 MB/s on the macmini
+and 35 MB/s on the powerbook when copying from/to different machines in the lan.
+
+Option [e] lauches the Morphos internal editor (mossys:c/ed) and loads up config files required for your local settings.
+           If you want to use DHCP you can skip this step, as Roadshow will try and get all the relevant info it needs from your router.
+           You need to know your : gateway (usally your routers ip)
+                                   dns     (usally your routers ip)
+                                   ip      (for your machine)
+
+
+Please read the Roadshow documentation if you need more information.
+
+
+To install a working arexx, try this
+
+1. use this url : http://aminet.net/search?content=rexxsyslib.library
+2. download any package, they should have rexxsyslib.library inside
+3. copy rexxsyslib.library to MOSSYS:libs/ (rename or overwrite the non working morphos one)
+4. reboot and arexx scripts should work.
+
