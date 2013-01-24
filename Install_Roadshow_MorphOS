@@ -21,15 +21,15 @@ destdir="SYS:"
 input:
 netstack=" "
 roadshow=" "
-if exists(''destdir'S/AddNetInterface') then step1="Aleady installed..."
-if exists(''destdir'Devs/NetInterfaces/SunGEM') then step2="Aleady installed..."
-if exists(''destdir'Devs/NetInterfaces/VIA_Rhine') then step3="Aleady installed..."
-if exists(''destdir'Devs/NetInterfaces/Freescale-MPC52xx') then step4="Aleady installed..."
-if exists(''destdir'Devs/NetInterfaces/Marvell-Discovery-II') then step5="Aleady installed..."
-if exists(''destdir'Devs/NetInterfaces/Realtek-RTL8139') then step6="Aleady installed..."
-if exists(''destdir'Docs/Roadshow68k') then step7="Aleady installed..."
-if exists(''destdir'S/IPF') then step8="Aleady installed..."
-if exists(''destdir'S/PPP-Configurations') then step9="Aleady installed..."
+if exists(''destdir'C/AddNetInterface') then step1="Already installed..."
+if exists(''destdir'Devs/NetInterfaces/SunGEM') then step2="Already installed..."
+if exists(''destdir'Devs/NetInterfaces/VIA_Rhine') then step3="Already installed..."
+if exists(''destdir'Devs/NetInterfaces/Freescale-MPC52xx') then step4="Already installed..."
+if exists(''destdir'Devs/NetInterfaces/Marvell-Discovery-II') then step5="Already installed..."
+if exists(''destdir'Devs/NetInterfaces/Realtek-RTL8139') then step6="Already installed..."
+if exists(''destdir'Docs/Roadshow68k') then step7="Already installed..."
+if exists(''destdir'S/IPF') then step8="Already installed..."
+if exists(''destdir'S/PPP-Configurations') then step9="Already installed..."
 
 if exists(''destdir'S/network-startup') then roadshow="X"
 if exists('MOSSYS:S/network-startup') then netstack="X"
@@ -172,8 +172,8 @@ return
 
 
 install:
-step1="installed"
-address command 'filenote #? "Roadshow 68K MorphOS Update 1.7" all'
+
+address command 'filenote #? "Roadshow 68K MorphOS Update 1.8" all'
 action='copy'
 call install_base
 /*
@@ -241,7 +241,7 @@ parse pull choice
 		say ""
 		say item" was removed"
 		address command "wait 2"
-step1="not installed"
+		step1="not installed"
 		call uninstall
 	end
 		  say " ** Abort **"
@@ -566,11 +566,12 @@ return
 /* END EXIT SCRIPT HERE */
 end:
 
-netstack=" "
-roadshow=" "
+
+netstack=0
+roadshow=0
 
 if exists('MOSSYS:S/network-startup') then do
-netstack="X"
+netstack=1
 say ""
 say " Morphos Internal Netstack is *enabled* and will start after a reboot"
 say " If you want to enable Roadshow 68k stack, run this installer again and press option [t]"
@@ -580,7 +581,7 @@ say "Exiting..."
 end
 
 if exists(''destdir'S/network-startup') then do
-roadshow="X"
+roadshow=1
 say ""
 say " Roadshow 68K stack is *enabled* and will start after a reboot"
 say " If you want to enable Morhos internal stack, run this installer again and press option [t]"
@@ -589,7 +590,10 @@ say ""
 say "Exiting..."
 end
 
-if netstack=" "|roadshow=" " then do
+say netstack
+say roadshow
+
+if netstack+roadshow=0 then do
 say ""
 say " * THERE IS NO TCP/IP STACKS ENABLED, YOU WILL BE WITHOUT NETWORK ON THE NEXT BOOT *"
 say ""
@@ -600,8 +604,8 @@ end
 exit
 
 
-install_base: /* install all basic files required for Roadshow to work on a local network except hw config files */
-
+install_base: /* install all basic files required for Roadshow to work on your network except hw config files */
+address command 'filenote #? "Roadshow 68K MorphOS Update 1.8" all'
 c: /**********************************************************************C*/
 source='Workbench/C/'
 dest=''destdir'C/'
