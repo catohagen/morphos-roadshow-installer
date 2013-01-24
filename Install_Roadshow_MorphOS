@@ -192,7 +192,7 @@ return
 uninstall:
 options prompt " (select 1-5) (q) to return to main meny -> : " 
 say ""
-say " Roadshow 68K Installer for MorphOS v1.2 (catohagen@fastmail.fm)"
+say " Roadshow 68K Installer for MorphOS v1.3 (catohagen@fastmail.fm)"
 say ""
 say "                         *** U N I N S T A L L   M E N U *** "
 say ""
