@@ -1,4 +1,4 @@
-/* Morphos installer for Roadshow 68K TCP/IP stack v1.2 (21.01.2013) by catohaghen@fastmail.fm */
+/* Morphos installer for Roadshow 68K TCP/IP stack v1.3 (24.01.2013) by catohaghen@fastmail.fm */
 
 
 step1="not installed"
@@ -11,19 +11,28 @@ step7="not installed"
 step8="not installed"
 step9="not installed"
 steps="not done"
-netstack=" "
-roadshow=" "
 
 stepe="not done"
 stepu="not done"
 
-input:
-if exists('SYS:C/AddNetInterface') then step1="Aleady installed..."
-if exists('SYS:Devs/NetInterfaces/SunGEM') then step2="Aleady installed..."
-if exists('SYS:Devs/NetInterfaces/VIA_Rhine') then step3="Aleady installed..."
-if exists('MOSSYS:S/network-startup') then netstack="X"
-if exists('MOSSYS:S/network-startup.off') then roadshow="X"
+/*destdir="ram:roadshow-test/"*/
+destdir="SYS:"
 
+input:
+netstack=" "
+roadshow=" "
+if exists(''destdir'S/AddNetInterface') then step1="Aleady installed..."
+if exists(''destdir'Devs/NetInterfaces/SunGEM') then step2="Aleady installed..."
+if exists(''destdir'Devs/NetInterfaces/VIA_Rhine') then step3="Aleady installed..."
+if exists(''destdir'Devs/NetInterfaces/Freescale-MPC52xx') then step4="Aleady installed..."
+if exists(''destdir'Devs/NetInterfaces/Marvell-Discovery-II') then step5="Aleady installed..."
+if exists(''destdir'Devs/NetInterfaces/Realtek-RTL8139') then step6="Aleady installed..."
+if exists(''destdir'Docs/Roadshow68k') then step7="Aleady installed..."
+if exists(''destdir'S/IPF') then step8="Aleady installed..."
+if exists(''destdir'S/PPP-Configurations') then step9="Aleady installed..."
+
+if exists(''destdir'S/network-startup') then roadshow="X"
+if exists('MOSSYS:S/network-startup') then netstack="X"
 
 action=''
 
@@ -31,26 +40,26 @@ options prompt " (select 1-9) (s-t-e-u) (q) to quit -> : "
 say ""
 say "Roadshow 68K Installer for MorphOS v1.2 (catohagen@fastmail.fm)"
 say ""
-say "press '1' to install Roadshow 68k TCP/IP stack                                                  ["step1"]"
+say "press [1] to install Roadshow 68k TCP/IP stack                                                  ["step1"]"
 say ""
-say "press '2' to install Apple Mac Mini or PowerBook SunGEM network configuration for MorphOS       ["step2"]"
-say "press '3' to install Pegasos/PegasosII internal VIA Rhine network configuration for MorphOS     ["step3"]"
-say "press '4' to install EFIKA 5200B internal Freescale-MPC52xx network configuration for MorphOS   ["step4"]"
-say "press '5' to install Pegasos/PegasosII internal Marvell-Discovery-II configuration for MorphOS  ["step5"]"
-say "press '6' to install Realtek-RTL8139 PCI card configuration for MorphOS                         ["step6"]"
+say "press [2] to install Apple Mac Mini or PowerBook SunGEM network configuration for MorphOS       ["step2"]"
+say "press [3] to install Pegasos/PegasosII internal VIA Rhine network configuration for MorphOS     ["step3"]"
+say "press [4] to install EFIKA 5200B internal Freescale-MPC52xx network configuration for MorphOS   ["step4"]"
+say "press [5] to install Pegasos/PegasosII internal Marvell-Discovery-II configuration for MorphOS  ["step5"]"
+say "press [6] to install Realtek-RTL8139 PCI card configuration for MorphOS                         ["step6"]"
 say ""
-say "press '7' to install Roadshow 68k Documentation (to SYS:Docs/Roadshow68k/)                      ["step7"]"
-say "press '8' to install Roadshow 68k The IPFILTER (IPF) Firewall                                   ["step8"]"
-say "press '9' to install Roadshow 68k PPP/PPPoE drivers for ADSL modems                             ["step9"]"
+say "press [7] to install Roadshow 68k Documentation (to SYS:Docs/Roadshow68k/)                      ["step7"]"
+say "press [8] to install Roadshow 68k The IPFILTER (IPF) Firewall                                   ["step8"]"
+say "press [9] to install Roadshow 68k PPP/PPPoE drivers for ADSL modems                             ["step9"]"
 say ""
-say "press 's' to configure Roadshow internal tcp settings                                           ["steps"]"
-say "press 't' to Trigger Morphos internal Netstack TCP/IP stack on/off                              ["netstack"] Netstack ["roadshow"] Roadshow"
+say "press [s] to configure Roadshow internal tcp settings                                           ["steps"]"
+say "press [t] to Trigger Morphos internal Netstack TCP/IP stack on/off                              ["netstack"] Netstack ["roadshow"] Roadshow"
 say ""
-say "press 'e' to manually edit basic configuration settings (your DNS and Gateway)                  ["stepe"]"
-say "press 'u' to uninstall/remove all Roadshow 68k and all additional files"
-say "**(Deletes all Roadshow files ,Apple/Pegasos config,docs,firewall and PPP/PPPoE drivers)"
+say "press [e] to manually edit basic configuration settings (your DNS and Gateway)                  ["stepe"]"
+say""
+say "press [u] to open uninstall submenu for Roadshow spesific files"
 say ""
-say "press 'q' to quit this installer"
+say "press [q] to quit this installer"
 say ""
 say ""
 
@@ -87,7 +96,7 @@ options prompt " Do you want to import the MorphOS Netstack 'hosts' file into Ro
 parse pull ans
 if ans="y" then do
 /* ##########################################################IMPORT HOSTS */
-call open(dat,"SYS:Prefs/Env-Archive/sys/net/hosts",'R')
+call open(dat,"'destdir'Prefs/Env-Archive/sys/net/hosts",'R')
 i=1
 do until eof(dat)
 line.i=readln(dat)
@@ -103,10 +112,10 @@ i=i+1
 end
 entries=i
 call close(dat)
-comment='# Lines below imported from Morphos Netstack <SYS:Prefs/Env-Archive/sys/net/hosts>'
+comment='# Lines below imported from Morphos Netstack <'destdir'Prefs/Env-Archive/sys/net/hosts>'
 
 i=1
-call open(dat,"sys:devs/internet/hosts",'a')
+call open(dat,"'destdir'devs/internet/hosts",'a')
 call writeln(dat,comment)
 do until i=entries-1
 call writeln(dat,line.i)
@@ -114,13 +123,13 @@ i=i+1
 end
 call close(dat)
 end
-address command 'mossys:c/ed devs:internet/hosts'
+address command 'MOSSYS:c/ed 'destdir'devs/internet/hosts'
 options prompt " Do you want to import the MorphOS Netstack dns 'NAMESERVERS' file into Roadshow -> : " 
 parse pull ans
 if ans="y" then do
 /* ########################################################## NAMESERVERS */
 
-call open(dat,"SYS:Prefs/Env-Archive/sys/net/resolv.conf",'R')
+call open(dat,"'destdir'Prefs/Env-Archive/sys/net/resolv.conf",'R')
 i=1
 do until eof(dat)
 line.i=readln(dat)
@@ -137,10 +146,10 @@ end
 entries=i
 call close(dat)
 
-comment='# Lines below imported from Morphos Netstack <SYS:Prefs/Env-Archive/sys/net/resolv.conf>'
+comment='# Lines below imported from Morphos Netstack <'destdir'Prefs/Env-Archive/sys/net/resolv.conf>'
 
 i=1
-call open(dat,"sys:devs/internet/name_resolution",'a')
+call open(dat,"'destdir'devs/internet/name_resolution",'a')
 call writeln(dat,comment)
 do until i=entries-1
 call writeln(dat,line.i)
@@ -152,12 +161,12 @@ end
 say ""
 say " Opening config files in editor, remember to save your changes before you quit the editor..."
 say ""
-address command 'mossys:c/ed devs:internet/name_resolution'
+address command 'MOSSYS:c/ed 'destdir'devs/internet/name_resolution'
 say ""
 options prompt " Opening config file for routes, this is the 'gateway' and is usally the ip of your router [press enter]"
 parse pull choice
 say ""
-address command 'mossys:c/ed devs:internet/routes'
+address command 'MOSSYS:c/ed devs:internet/routes'
 return
 
 
@@ -181,29 +190,348 @@ return
 return
 
 uninstall:
+options prompt " (select 1-5) (q) to return to main meny -> : " 
+say ""
+say " Roadshow 68K Installer for MorphOS v1.2 (catohagen@fastmail.fm)"
 say ""
-options prompt " ** This will delete all files related to Roadshow, ARE YOU SURE ** (y or n) : " 
+say "                         *** U N I N S T A L L   M E N U *** "
+say ""
+say " press [1] to remove Roadshow 68k TCP/IP stack -base- stuff (C/ & Devs/ & libs/ &S/ files)      ["step1"]"
+say ""
+say " press [2] to remove Apple Mac Mini or PowerBook SunGEM network configuration for MorphOS       ["step2"]"
+say " press [3] to remove Pegasos/PegasosII internal VIA Rhine network configuration for MorphOS     ["step3"]"
+say " press [4] to remove EFIKA 5200B internal Freescale-MPC52xx network configuration for MorphOS   ["step4"]"
+say " press [5] to remove Pegasos/PegasosII internal Marvell-Discovery-II configuration for MorphOS  ["step5"]"
+say " press [6] to remove Realtek-RTL8139 PCI card configuration for MorphOS                         ["step6"]"
+say ""
+say " press [7] to remove Roadshow 68k Documentation (from SYS:Docs/Roadshow68k/)                    ["step7"]"
+say " press [8] to remove Roadshow 68k The IPFILTER (IPF) Firewall                                   ["step8"]"
+say " press [9] to remove Roadshow 68k PPP/PPPoE drivers for ADSL modems                             ["step9"]"
+say ""
+say " press [a] to remove All Roadshow 68k -base- files, all drivers,docs,firewall,ppp/pppoe, the lot"
+
+/*options prompt " ** This will delete all files related to Roadshow, ARE YOU SURE ** (y or n) : "*/
+say ""
 parse pull choice
-if choice="y" then do
-options prompt " ** Enter 'yes' or 'no' : " 
+
+if choice="q" then call input
+if choice="1" then call un1
+if choice="2" then call un2
+if choice="3" then call un3
+if choice="4" then call un4
+if choice="5" then call un5
+if choice="6" then call un6
+if choice="7" then call un7
+if choice="8" then call un8
+if choice="9" then call un9
+if choice="a" then call una
+
+un1:
+item="Roadshow Base files"
+say ""
+options prompt " ** This will remove "item "from your system , ARE YOU SURE ** (y or n) : "
+say ""
 parse pull choice
-if choice="yes" then do
+   if choice="y" then do
+ options prompt " ** Enter 'yes' or 'no' : " 
+	parse pull choice
+	if choice="yes" then do
+		action='delete'
+		call install_base
+		say ""
+		say item" was removed"
+		address command "wait 2"
+step1="not installed"
+		call uninstall
+	end
+		  say " ** Abort **"
+	          address command "wait 2"
+	say " ** Returning to menu in (2)secs **"
+	address command "wait 2"
+	call uninstall
+   end
+say ""
+say " ** Aborting **"
+say " ** Returning to menu in (2)secs **"
+address command "wait 2"
+call uninstall
+
+/* | */
+un2:
+item="Apple Mac Mini / PowerBook SunGEM files"
+say ""
+options prompt " ** This will remove "item "from your system , ARE YOU SURE ** (y or n) : "
+say ""
+parse pull choice
+   if choice="y" then do
+	options prompt " ** Enter 'yes' or 'no' : " 
+	parse pull choice
+	if choice="yes" then do
+		action='delete'
+		call apple_hw
+		say ""
+		say item" was removed"
+		address command "wait 2"
+		step2="not installed"
+		call uninstall
+	end
+		  say " ** Abort **"
+	          address command "wait 2"
+	say " ** Returning to menu in (2)secs **"
+	address command "wait 2"
+	call uninstall
+   end
+say ""
+say " ** Aborting **"
+say " ** Returning to menu in (2)secs **"
+address command "wait 2"
+call uninstall
+
+un3:
+item="Pegasos/PegasosII VIA Rhine files"
+say ""
+options prompt " ** This will remove "item "from your system , ARE YOU SURE ** (y or n) : "
+say ""
+parse pull choice
+   if choice="y" then do
+	options prompt " ** Enter 'yes' or 'no' : " 
+	parse pull choice
+	if choice="yes" then do
+		action='delete'
+		call pegasos_via_rhine
+		say ""
+		say item" was removed"
+		address command "wait 2"
+		step3="not installed"
+		call uninstall
+	end
+		  say " ** Abort **"
+	          address command "wait 2"
+	say " ** Returning to menu in (2)secs **"
+	address command "wait 2"
+	call uninstall
+   end
+say ""
+say " ** Aborting **"
+say " ** Returning to menu in (2)secs **"
+address command "wait 2"
+call uninstall
+
+un4:
+item="EFIKA 5200B Freescale-MPC52xx files"
+say ""
+options prompt " ** This will remove "item "from your system , ARE YOU SURE ** (y or n) : "
+say ""
+parse pull choice
+   if choice="y" then do
+	options prompt " ** Enter 'yes' or 'no' : " 
+	parse pull choice
+	if choice="yes" then do
+		action='delete'
+		call efika_mpc52xx
+		say ""
+		say item" was removed"
+		address command "wait 2"
+		step4="not installed"
+		call uninstall
+	end
+		  say " ** Abort **"
+	          address command "wait 2"
+	say " ** Returning to menu in (2)secs **"
+	address command "wait 2"
+	call uninstall
+   end
+say ""
+say " ** Aborting **"
+say " ** Returning to menu in (2)secs **"
+address command "wait 2"
+call uninstall
+
+un5:
+item="Pegasos/PegasosII Marvell-Discovery-II files"
+say ""
+options prompt " ** This will remove "item "from your system , ARE YOU SURE ** (y or n) : "
+say ""
+parse pull choice
+   if choice="y" then do
+	options prompt " ** Enter 'yes' or 'no' : " 
+	parse pull choice
+	if choice="yes" then do
+		action='delete'
+		call pegasos_marvell_discovery
+		say ""
+		say item" was removed"
+		address command "wait 2"
+		step5="not installed"
+		call uninstall
+	end
+		  say " ** Abort **"
+	          address command "wait 2"
+	say " ** Returning to menu in (2)secs **"
+	address command "wait 2"
+	call uninstall
+   end
+say ""
+say " ** Aborting **"
+say " ** Returning to menu in (2)secs **"
+address command "wait 2"
+call uninstall
+
+un6:
+item="Realtek-RTL8139 PCI card files"
+say ""
+options prompt " ** This will remove "item "from your system , ARE YOU SURE ** (y or n) : "
+say ""
+parse pull choice
+   if choice="y" then do
+	options prompt " ** Enter 'yes' or 'no' : " 
+	parse pull choice
+	if choice="yes" then do
+		action='delete'
+		call rtl_8139
+		say ""
+		say item" was removed"
+		address command "wait 2"
+		step6="not installed"
+		call uninstall
+	end
+		  say " ** Abort **"
+	          address command "wait 2"
+	say " ** Returning to menu in (2)secs **"
+	address command "wait 2"
+	call uninstall
+   end
+say ""
+say " ** Aborting **"
+say " ** Returning to menu in (2)secs **"
+address command "wait 2"
+call uninstall
+
+un7:
+item="Roadshow 68k Documentation"
+say ""
+options prompt " ** This will remove "item "from your system , ARE YOU SURE ** (y or n) : "
+say ""
+parse pull choice
+   if choice="y" then do
+	options prompt " ** Enter 'yes' or 'no' : " 
+	parse pull choice
+	if choice="yes" then do
+		action='delete'
+		call docs
+		say ""
+		say item" was removed"
+		address command "wait 2"
+		step7="not installed"
+		call uninstall
+	end
+		  say " ** Abort **"
+	          address command "wait 2"
+	say " ** Returning to menu in (2)secs **"
+	address command "wait 2"
+	call uninstall
+   end
+say ""
+say " ** Aborting **"
+say " ** Returning to menu in (2)secs **"
+address command "wait 2"
+call uninstall
+
+un8:
+item="Roadshow 68k The IPFILTER (IPF) Firewall files"
+say ""
+options prompt " ** This will remove "item "from your system , ARE YOU SURE ** (y or n) : "
+say ""
+parse pull choice
+   if choice="y" then do
+	options prompt " ** Enter 'yes' or 'no' : " 
+	parse pull choice
+	if choice="yes" then do
+		action='delete'
+		call firewall
+		say ""
+		say item" was removed"
+		address command "wait 2"
+		step8="not installed"
+		call uninstall
+	end
+		  say " ** Abort **"
+	          address command "wait 2"
+	say " ** Returning to menu in (2)secs **"
+	address command "wait 2"
+	call uninstall
+   end
+say ""
+say " ** Aborting **"
+say " ** Returning to menu in (2)secs **"
+address command "wait 2"
+call uninstall
+
+un9:
+item="Roadshow 68k PPP/PPPoE files "
+say ""
+options prompt " ** This will remove "item "from your system , ARE YOU SURE ** (y or n) : "
+say ""
+parse pull choice
+   if choice="y" then do
+	options prompt " ** Enter 'yes' or 'no' : " 
+	parse pull choice
+	if choice="yes" then do
+		action='delete'
+		call ppp
+		say ""
+		say item" was removed"
+		address command "wait 2"
+		step9="not installed"
+		call uninstall
+	end
+		  say " ** Abort **"
+	          address command "wait 2"
+	say " ** Returning to menu in (2)secs **"
+	address command "wait 2"
+	call uninstall
+   end
+say ""
+say " ** Aborting **"
+say " ** Returning to menu in (2)secs **"
+address command "wait 2"
+call uninstall
+
+
+una:
+item="All Roadshow 68k -base- files, all drivers,docs,firewall,ppp/pppoe, the lot"
+say ""
+options prompt " ** This will remove "item "from your system , ARE YOU SURE ** (y or n) : "
+say ""
+parse pull choice
+   if choice="y" then do
+	options prompt " ** Enter 'yes' or 'no' : " 
+	parse pull choice
+	if choice="yes" then do
 action='delete'
 call install_base
+address command "wait 1"
 action='delete'
 call apple_hw
+address command "wait 1"
 action='delete'
 call pegasos_via_rhine
+address command "wait 1"
 action='delete'
 call efika_mpc52xx
+address command "wait 1"
 action='delete'
 call pegasos_marvell_discovery
+address command "wait 1"
 action='delete'
 call rtl_8139
+address command "wait 1"
 action='delete'
 call docs
+address command "wait 1"
 action='delete'
 call firewall
+address command "wait 1"
 action='delete'
 call ppp
 step1="not installed"
@@ -215,41 +543,73 @@ step6="not installed"
 step7="not installed"
 step8="not installed"
 step9="not installed"
- end 
- if choice~="yes" then do
- say ""
- say " Nothing was deleted..."
- address command 'wait 5'
- return
- end
-end
- say " Roadshow was removed from system..."
- address command 'wait 5'
+		say ""
+		say item" was removed"
+		address command "wait 2"
+		step9="not installed"
+		call uninstall
+	end
+		  say " ** Abort **"
+	          address command "wait 2"
+	say " ** Returning to menu in (2)secs **"
+	address command "wait 2"
+	call uninstall
+   end
+say ""
+say " ** Aborting **"
+say " ** Returning to menu in (2)secs **"
+address command "wait 2"
+call uninstall
 
 return
 
 /* END EXIT SCRIPT HERE */
 end:
+
+netstack=" "
+roadshow=" "
+
+if exists('MOSSYS:S/network-startup') then do
+netstack="X"
 say ""
-say " * As this installer will not edit or touch your MorphOS internal system files (MOSSYS:) you need to manually"
-say " * rename MOSSYS:S/network-startup so the MorphOS internal Netstack will not be started on the next reboot."
+say " Morphos Internal Netstack is *enabled* and will start after a reboot"
+say " If you want to enable Roadshow 68k stack, run this installer again and press option [t]"
+address command "wait 6"
 say ""
-say " After you have done this and rebooted, you can manually start S:Network-Startup.off (dbl click from Ambient) and bring Roadshow up."
-say " If everything works, you can rename S:Network-Startup.off to S:Network-Startup and Roadshow will be started at boot."
-/*address AMBIENT loaduri 'mossys:s?view=list' newwin */
+say "Exiting..."
+end
+
+if exists(''destdir'S/network-startup') then do
+roadshow="X"
+say ""
+say " Roadshow 68K stack is *enabled* and will start after a reboot"
+say " If you want to enable Morhos internal stack, run this installer again and press option [t]"
+address command "wait 6"
+say ""
+say "Exiting..."
+end
+
+if netstack=" "|roadshow=" " then do
+say ""
+say " * THERE IS NO TCP/IP STACKS ENABLED, YOU WILL BE WITHOUT NETWORK ON THE NEXT BOOT *"
+say ""
+say " If you want to enable Netstack or Roadshow stack, run this installer again and press option [t]"
+address command "wait 6"
+end
+
 exit
 
 
-install_base: /* install all basic files required for Roadshow to work on a local network */
+install_base: /* install all basic files required for Roadshow to work on a local network except hw config files */
 
 c: /**********************************************************************C*/
 source='Workbench/C/'
-dest='sys:C/'
+dest=''destdir'C/'
 
+if action="copy" then do
 /* first rename included wget to wget68k so no existing wget gets overwritten */
 address command 'rename 'source'wget 'source'wget68k'
 
-if action="copy" then do
 address command ''action' 'source'* 'dest' comment'
 
 /* addnetinterfaces from Morphos upgrade */
@@ -269,7 +629,7 @@ address command ''action' 'dest'ppp_connector'
 address command ''action' 'dest'RemoveNetInterface'
 address command ''action' 'dest'SampleNetSpeed'
 address command ''action' 'dest'tcpdump'
-/* delete c:wget68k */
+/* delete c:wget68k but not c:wget */
 address command ''action' 'dest'wget68k'
 address command ''action' 'dest'traceroute'
 address command ''action' 'dest'ShowNetStatus'
@@ -288,48 +648,51 @@ end
 
 devs: /**********************************************************************devs*/
 source='Workbench/Devs/Internet/'
-dest='sys:Devs/Internet/'
+dest=''destdir'Devs/Internet/'
 
 if action="copy" then do
 address command ''action' 'source'* 'dest' comment all'
 end
 
 if action="delete" then do
-dest='sys:Devs/Internet'
+dest=''destdir'Devs/Internet'
 address command ''action' 'dest 'all'
 end
 
 
 libs: /**********************************************************************libs*/
 source='Workbench/Libs/'
-dest='sys:Libs/'
+dest=''destdir'Libs/'
 
 if action="copy" then do
 address command ''action' 'source'* 'dest' comment all'
 end
 
 if action="delete" then do
-dest='sys:Libs/'
+dest=''destdir'Libs/'
 address command ''action' 'dest'usergroup.library'
 address command ''action' 'dest'bsdsocket.library'
 end
 
 s: /**********************************************************************S*/
 source='Workbench/S/'
-dest='sys:S/'
+dest=''destdir'S/'
 
 if action="copy" then do
 address command ''action' 'source'Network-Startup 'dest' comment all'
 /* rename so it doesnt start up at boot */
-address command 'rename SYS:S/Network-Startup SYS:S/Network-Startup.off'
+address command 'rename 'destdir'S/Network-Startup 'destdir'S/Network-Startup.off'
 end
 
 if action="delete" then do
-dest='sys:S/'
+dest=''destdir'S/'
 address command ''action' 'dest'Network-Startup'
 end
 
-return 0
+say "Finished with install...returning to menu in (3)secs"
+address command "wait 3"
+
+return
 
 
 /* Locale, documentation, firewall and ppp&pppoe installations */
@@ -338,7 +701,7 @@ return 0
 locale: /**********************************************************************locale*/
 if action='' then action='copy'
 source='Workbench/Locale/catalogs/deutsch/'
-dest='sys:Locale/catalogs/deutsch/'
+dest=''destdir'Locale/catalogs/deutsch/'
 if action="copy" then do
 address command ''action' 'source'* 'dest' comment'
 end
@@ -350,13 +713,15 @@ address command ''action' 'dest'ppp-serial.catalog'
 address command ''action' 'dest'ppp-ethernet.catalog'
 address command ''action' 'dest'bsdsocket.catalog'
 end
+say "Finished with install...returning to menu in (3)secs"
+address command "wait 3"
 return
 
 firewall: /**********************************************************************firewall*/
 step8="installed"
 if action='' then action='copy'
 source='Workbench/S/'
-dest='sys:S/'
+dest=''destdir'S/'
 
 if action="copy" then do
 address command ''action' 'source'Check-Firewall-Rules 'dest' comment'
@@ -364,21 +729,24 @@ address command ''action' 'source'Stop-Firewall 'dest' comment'
 address command ''action' 'source'Start-Firewall 'dest' comment'
 
 source='Workbench/S/IPF'
-dest='sys:S/'
+dest=''destdir'S/'
 address command ''action' 'source'* 'dest' comment all'
 
 end
 
 if action="delete" then do
-dest='sys:S/'
+dest=''destdir'S/'
 address command ''action' 'dest'Check-Firewall-Rules'
 address command ''action' 'dest'Stop-Firewall'
 address command ''action' 'dest'Start-Firewall'
 
-dest='sys:S/IPF'
+dest=''destdir'S/IPF'
 address command ''action' 'dest 'all'
 
 end
+say "Finished with install...returning to menu in (3)secs"
+address command "wait 3"
+
 return
 
 docs: /**********************************************************************docs*/
@@ -386,16 +754,18 @@ step7="installed"
 
 if action='' then action='copy'
 source='Documentation'
-dest='sys:Docs/Roadshow68k/'
+dest=''destdir'Docs/Roadshow68k/'
 
 if action="copy" then do
 address command ''action' 'source'* 'dest' comment all'
 end
 
 if action="delete" then do
-dest='sys:Docs/Roadshow68k'
+dest=''destdir'Docs/Roadshow68k'
 address command ''action' 'dest 'all'
 end
+say "Finished with install...returning to menu in (3)secs"
+address command "wait 3"
 
 return
 
@@ -404,17 +774,17 @@ step9="installed"
 
 if action='' then action='copy'
 source='Workbench/S/PPP-Configurations/'
-dest='sys:S/PPP-Configurations/'
+dest=''destdir'S/PPP-Configurations/'
 
 if action="copy" then do
 address command ''action' 'source'* 'dest' comment all'
 source='Workbench/Devs/Networks/'
-dest='sys:Devs/Networks/'
+dest=''destdir'Devs/Networks/'
 address command ''action' 'source'* 'dest' comment all'
 
 /* copy the PPP/PPPoE drivers */
 source='Workbench/Storage/NetInterfaces/'
-dest='sys:Devs/NetInterfaces/'
+dest=''destdir'Devs/NetInterfaces/'
 address command ''action' 'source'PPP 'dest' comment'
 address command ''action' 'source'PPP.info 'dest' comment'
 address command ''action' 'source'PPPoE 'dest' comment'
@@ -423,18 +793,20 @@ address command ''action' 'source'PPPoE.info 'dest' comment'
 end
 
 if action="delete" then do
-dest='sys:Devs/Networks/'
+dest=''destdir'Devs/Networks/'
 address command ''action' 'dest'ppp-serial.device'
 address command ''action' 'dest'ppp-ethernet.device'
-dest='sys:S/PPP-Configurations'
+dest=''destdir'S/PPP-Configurations'
 address command ''action' 'dest 'all'
-dest='sys:Devs/NetInterfaces/'
+dest=''destdir'Devs/NetInterfaces/'
 address command ''action' 'dest'PPP'
 address command ''action' 'dest'PPP.info'
 address command ''action' 'dest'PPPoE'
 address command ''action' 'dest'PPPoE.info'
 
 end
+say "Finished with install...returning to menu in (3)secs"
+address command "wait 3"
 return
 
 
@@ -442,7 +814,7 @@ apple_hw: /*********************************************************************
 step2="installed"
 if action="" then action="copy"
 source='Roadshow-Update-MorphOS/Files/'
-dest='sys:Devs/NetInterfaces/'
+dest=''destdir'Devs/NetInterfaces/'
 
 if action="copy" then do
 address command ''action' 'source'SunGEM.info 'dest' comment'
@@ -456,22 +828,24 @@ options prompt " Enter 'y' to edit (opens in editor) SunGEM interface or 'n' to 
 parse pull choice
 
 if choice="y" then do
-address command 'mossys:c/ed devs:NetInterfaces/SunGEM'
+address command 'MOSSYS:c/ed 'destdir'devs/NetInterfaces/SunGEM'
 end
 
 end
 
 if action="delete" then do
-dest='sys:Devs/NetInterfaces/SunGEM*'
+dest=''destdir'Devs/NetInterfaces/SunGEM*'
 address command ''action' 'dest
 end
+say "Finished with install...returning to menu in (3)secs"
+address command "wait 3"
 
 return
 pegasos_via_rhine: /**********************************************************************via*/
 step3="installed"
 if action='' then action='copy'
 source='Roadshow-Update-MorphOS/Files/'
-dest='sys:Devs/NetInterfaces/'
+dest=''destdir'Devs/NetInterfaces/'
 
 if action="copy" then do
 address command ''action' 'source'VIA-Rhine.info 'dest' comment'
@@ -485,24 +859,26 @@ options prompt " Enter 'y' to edit (opens in editor) VIA_Rhine interface or 'n' 
 parse pull choice
 
 if choice="y" then do
-address command 'mossys:c/ed devs:NetInterfaces/VIA-Rhine'
+address command 'MOSSYS:c/ed 'destdir'devs/NetInterfaces/VIA-Rhine'
 end
 
 end
 
 if action="delete" then do
-dest='sys:Devs/NetInterfaces/VIA-Rhine*'
+dest=''destdir'Devs/NetInterfaces/VIA-Rhine*'
 address command ''action' 'dest
 end
 
+say "Finished with install...returning to menu in (3)secs"
+address command "wait 3"
 return
 
 
-efika_mpc52xx: /**********************************************************************via*/
+efika_mpc52xx: /**********************************************************************efika*/
 step4="installed"
 if action='' then action='copy'
 source='Roadshow-Update-MorphOS/Files/'
-dest='sys:Devs/NetInterfaces/'
+dest=''destdir'Devs/NetInterfaces/'
 
 if action="copy" then do
 address command ''action' 'source'Freescale-MPC52xx 'dest' comment'
@@ -516,23 +892,25 @@ options prompt " Enter 'y' to edit (opens in editor) Freescale-MPC52xx interface
 parse pull choice
 
 if choice="y" then do
-address command 'mossys:c/ed devs:NetInterfaces/Freescale-MPC52xx'
+address command 'MOSSYS:c/ed 'destdir'devs/NetInterfaces/Freescale-MPC52xx'
 end
 
 end
 
 if action="delete" then do
-dest='sys:Devs/NetInterfaces/Freescale-MPC52xx*'
+dest=''destdir'Devs/NetInterfaces/Freescale-MPC52xx*'
 address command ''action' 'dest
 end
 
+say "Finished with install...returning to menu in (3)secs"
+address command "wait 3"
 return
 
-pegasos_marvell_discovery: /**********************************************************************via*/
+pegasos_marvell_discovery: /**********************************************************************marvell*/
 step5="installed"
 if action='' then action='copy'
 source='Roadshow-Update-MorphOS/Files/'
-dest='sys:Devs/NetInterfaces/'
+dest=''destdir'Devs/NetInterfaces/'
 
 if action="copy" then do
 address command ''action' 'source'Marvell-Discovery-II 'dest' comment'
@@ -546,23 +924,25 @@ options prompt " Enter 'y' to edit (opens in editor) Marvell-Discovery-II interf
 parse pull choice
 
 if choice="y" then do
-address command 'mossys:c/ed devs:NetInterfaces/Marvell-Discovery-II'
+address command 'MOSSYS:c/ed 'destdir'devs/NetInterfaces/Marvell-Discovery-II'
 end
 
 end
 
 if action="delete" then do
-dest='sys:Devs/NetInterfaces/Marvell-Discovery-II*'
+dest=''destdir'Devs/NetInterfaces/Marvell-Discovery-II*'
 address command ''action' 'dest
 end
 
+say "Finished with install...returning to menu in (3)secs"
+address command "wait 3"
 return
 
-rtl_8139:
+rtl_8139: /**********************************************************************rtl8139*/
 step6="installed"
 if action='' then action='copy'
 source='Roadshow-Update-MorphOS/Files/'
-dest='sys:Devs/NetInterfaces/'
+dest=''destdir'Devs/NetInterfaces/'
 
 if action="copy" then do
 address command ''action' 'source'Realtek-RTL8139 'dest' comment'
@@ -576,16 +956,18 @@ options prompt " Enter 'y' to edit (opens in editor) Realtek-RTL8139 interface o
 parse pull choice
 
 if choice="y" then do
-address command 'mossys:c/ed devs:NetInterfaces/Realtek-RTL8139'
+address command 'MOSSYS:c/ed 'destdir'devs/NetInterfaces/Realtek-RTL8139'
 end
 
 end
 
 if action="delete" then do
-dest='sys:Devs/NetInterfaces/Realtek-RTL8139*'
+dest=''destdir'Devs/NetInterfaces/Realtek-RTL8139*'
 address command ''action' 'dest
 end
 
+say "Finished with install...returning to menu in (3)secs"
+address command "wait 3"
 return
 
 
@@ -701,33 +1083,59 @@ step9="done"
 call input
 
 trigger_stacks:
-
 if exists('MOSSYS:S/network-startup') then do
-say 'disable netstack and enable roadshow...'
+say ""
+say " disable netstack and enable roadshow..."
+say ""
 address command 'rename MOSSYS:S/network-startup MOSSYS:S/network-startup.off'
-address command 'rename SYS:S/network-startup.off SYS:S/network-startup'
+if exists(''destdir'S/network-startup.off') then do
+address command 'rename 'destdir'S/network-startup.off 'destdir'S/network-startup'
+say ""
+say " Roadshow is *enabled* as current TCP/IP stack and will start on the next reboot..."
+say ""
+roadshow="X"
+netstack=" "
+address command 'wait 2'
+end
+if ~exists(''destdir'S/network-startup') then do
+say ""
+say " Cant disable Roadshow as startup file was not found, please check your S: dir for a file called network-startup.."
+options prompt " Do you want me to open a new Ambient lister window for s: ? (y or n) : "
+parse pull openwin
+if openwin="y" then do
+address AMBIENT loaduri destdir's?view=list' newwin
+return
+end
+end
+
 netstack=" "
 address command 'wait 3'
 return
 end
 
 if exists('MOSSYS:S/network-startup.off') then do
-say 'disable roadshow and enable netstack...'
-address command 'rename MOSSYS:S/network-startup.off MOSSYS:S/network-startup'
-address command 'rename SYS:S/network-startup SYS:S/network-startup.off'
-roadshow=" "
+ say "" 
+ say " disable roadshow and enable netstack..."
+ say ""
+ say ""
+ say " MorphOS Netstack is *enabled* as current TCP/IP stack and will start on the next reboot..."
+ say ""
+ address command 'rename MOSSYS:S/network-startup.off MOSSYS:S/network-startup'
+ netstack="X"
+ if ~exists(''destdir'S/network-startup') then do
+  say ""
+  say " Cant disable Roadshow as its not currently installed..."
+  say ""
+ end
+
+ if exists(''destdir'S/network-startup') then do
+  address command 'rename 'destdir'S/network-startup 'destdir'S/network-startup.off'
+  roadshow=" "
+  address command 'wait 3'
+ end
+
+end
+say ""
 address command 'wait 3'
-return
-end
 
-return
-
-import_netstack_hosts:
-call open(dat,"ram:list",'R')
-
-do until eof(dat)
-line=readln(dat)
-say line'<br>'
-end
-call close(dat)
 return
