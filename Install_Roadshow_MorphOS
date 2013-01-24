@@ -38,7 +38,7 @@ action=''
 
 options prompt " (select 1-9) (s-t-e-u) (q) to quit -> : " 
 say ""
-say "Roadshow 68K Installer for MorphOS v1.2 (catohagen@fastmail.fm)"
+say "Roadshow 68K Installer for MorphOS v1.3 (catohagen@fastmail.fm)"
 say ""
 say "press [1] to install Roadshow 68k TCP/IP stack                                                  ["step1"]"
 say ""
